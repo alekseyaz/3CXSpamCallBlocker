@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29609.76
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "3CXSpamCallBlockerCore", "3CXSpamCallBlocker\3CXSpamCallBlockerCore.csproj", "{8654E067-D0AA-49CE-86BC-670D4C4C0F4C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8654E067-D0AA-49CE-86BC-670D4C4C0F4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8654E067-D0AA-49CE-86BC-670D4C4C0F4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8654E067-D0AA-49CE-86BC-670D4C4C0F4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8654E067-D0AA-49CE-86BC-670D4C4C0F4C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F5B82B98-6B3B-4369-8754-46C1B20F1DC4}
+	EndGlobalSection
+EndGlobal
