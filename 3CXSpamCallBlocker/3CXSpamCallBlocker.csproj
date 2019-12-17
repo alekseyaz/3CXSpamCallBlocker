@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>_3CXSpamCallBlocker</RootNamespace>
+    <StartupObject></StartupObject>
+    <AssemblyName>3CXSpamCallBlocker</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="3cxpscomcpp2">
+      <HintPath>C:\Program Files\3CX Phone System\Bin\3cxpscomcpp2.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>
