@@ -11,7 +11,7 @@
   <ItemGroup>
     <Reference Include="3cxpscomcpp2">
       <HintPath>C:\Program Files\3CX Phone System\Bin\3cxpscomcpp2.dll</HintPath>
-      <Private>true</Private>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
 

@@ -20,7 +20,7 @@ namespace _3CXSpamCallBlocker
             foreach (var c in PhoneSystem.Root.GetActiveConnectionsByCallID())
             {
                 Console.ResetColor();
-                Console.WriteLine($"Call {c.Key}:");
+                Console.WriteLine($"PrintAllCalls Call {c.Key}:");
                 foreach (var ac in c.Value.OrderBy(x => x.CallConnectionID))
                 {
                     Console.WriteLine($"    {ConnectionAsString(ac)}");
@@ -34,7 +34,7 @@ namespace _3CXSpamCallBlocker
             {
                 foreach (var kv in ownertoparties)
                 {
-                    Console.WriteLine($"Call {kv.Key.CallID}:");
+                    Console.WriteLine($"PrintDNCall Call {kv.Key.CallID}:");
                     var owner = kv.Key;
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"    {ConnectionAsString(owner)}");
@@ -43,6 +43,9 @@ namespace _3CXSpamCallBlocker
                     {
                         Console.WriteLine($"    {ConnectionAsString(party)}");
                     }
+
+                    kv.Key.Drop();
+
                 }
             }
             finally
@@ -56,25 +59,50 @@ namespace _3CXSpamCallBlocker
             var ps = PhoneSystem.Root;
             //var calls = PhoneSystem.Root.GetActiveConnectionsByCallID();
 
-            PhoneSystem.Root.GetByID<ActiveConnection>(00).Drop();
+            //PhoneSystem.Root.GetByID<ActiveConnection>(int.Parse(args[2])).Drop();
 
-            PrintAllCalls();
+            //try
+            //{
+            //    ac.Drop();
+            //}
+            //catch
+            //{
+            //    Console.WriteLine("fdfdfd");
+            //}
 
-            using (var dn = PhoneSystem.Root.GetDNByNumber("00"))
-            {
-                using (var connections = dn.GetActiveConnections().GetDisposer())
+            //PrintAllCalls();
+
+ 
+
+                
+                 
+                using (var dn = PhoneSystem.Root.GetDNByNumber("10001"))
                 {
-                    var alltakenconnections = connections.ToDictionary(x => x, y => y.OtherCallParties);
-                    PrintDNCall(alltakenconnections);
-                    foreach (var a in alltakenconnections.Values)
+
+
+
+
+                while (!Program.Stop)
+                {
+
+                    using (var connections = dn.GetActiveConnections().GetDisposer())
                     {
-                        a.GetDisposer().Dispose();
+
+                        var alltakenconnections = connections.ToDictionary(x => x, y => y.OtherCallParties);
+                        PrintDNCall(alltakenconnections);
+                        foreach (var a in alltakenconnections.Values)
+                        {
+                            a.GetDisposer().Dispose();
+                        }
                     }
+
+
+                    Thread.Sleep(100);
+
                 }
+
             }
 
-
-    
         }
     }
 

@@ -56,7 +56,7 @@ namespace _3CXSpamCallBlocker
             ps.WaitForConnect(TimeSpan.FromSeconds(30));
             try
             {
-                //......
+                MonitorActiveConnections.Run();
             }
             finally
             {
