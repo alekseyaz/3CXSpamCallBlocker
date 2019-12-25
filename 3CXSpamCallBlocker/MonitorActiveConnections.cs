@@ -15,20 +15,20 @@ namespace _3CXSpamCallBlocker
             return $"ID={ac.ID}:CCID={ac.CallConnectionID}:S={ac.Status}:DN={ac.DN.Number}:EP={ac.ExternalParty}:REC={ac.RecordingState}";
         }
 
-        static void PrintAllCalls()
-        {
-            foreach (var c in PhoneSystem.Root.GetActiveConnectionsByCallID())
-            {
-                Console.ResetColor();
-                Console.WriteLine($"PrintAllCalls Call {c.Key}:");
-                foreach (var ac in c.Value.OrderBy(x => x.CallConnectionID))
-                {
-                    Console.WriteLine($"    {ConnectionAsString(ac)}");
-                }
-            }
-        }
+        //static void PrintAllCalls()
+        //{
+        //    foreach (var c in PhoneSystem.Root.GetActiveConnectionsByCallID())
+        //    {
+        //        Console.ResetColor();
+        //        Console.WriteLine($"PrintAllCalls Call {c.Key}:");
+        //        foreach (var ac in c.Value.OrderBy(x => x.CallConnectionID))
+        //        {
+        //            Console.WriteLine($"    {ConnectionAsString(ac)}");
+        //        }
+        //    }
+        //}
 
-        static void PrintDNCall(Dictionary<ActiveConnection, ActiveConnection[]> ownertoparties)
+        static void CheckDNCall(Dictionary<ActiveConnection, ActiveConnection[]> ownertoparties)
         {
             try
             {
@@ -44,19 +44,25 @@ namespace _3CXSpamCallBlocker
                         Console.WriteLine($"    {ConnectionAsString(party)}");
                     }
 
-                    kv.Key.Drop();
+                    
+
+                    if (WhoCalling.ThisBadCall(owner.ExternalParty))
+                    {
+                        kv.Key.Drop();
+                        break;
+                    }
 
                 }
             }
-            finally
+            catch (Exception e)
             {
-                Console.ResetColor();
+                throw e;
             }
         }
         
         public static void Run()
         {
-            var ps = PhoneSystem.Root;
+            //var ps = PhoneSystem.Root;
             //var calls = PhoneSystem.Root.GetActiveConnectionsByCallID();
 
             //PhoneSystem.Root.GetByID<ActiveConnection>(int.Parse(args[2])).Drop();
@@ -79,9 +85,6 @@ namespace _3CXSpamCallBlocker
                 using (var dn = PhoneSystem.Root.GetDNByNumber("10001"))
                 {
 
-
-
-
                 while (!Program.Stop)
                 {
 
@@ -89,16 +92,14 @@ namespace _3CXSpamCallBlocker
                     {
 
                         var alltakenconnections = connections.ToDictionary(x => x, y => y.OtherCallParties);
-                        PrintDNCall(alltakenconnections);
+                        CheckDNCall(alltakenconnections);
                         foreach (var a in alltakenconnections.Values)
                         {
                             a.GetDisposer().Dispose();
                         }
                     }
 
-
                     Thread.Sleep(100);
-
                 }
 
             }

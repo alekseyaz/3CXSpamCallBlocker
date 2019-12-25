@@ -1,14 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
 using System.IO;
+using System.Net;
+using System.Text;
 using System.Web;
 
 namespace _3CXSpamCallBlocker
 {
-    class WhoCalling
+    internal class WhoCalling
     {
+        public static bool ThisBadCall(string PhoneNumber)
+        {
+            string answer = GET("https://yandex.ru/suggest/suggest-ya.cgi", "part=" + HttpUtility.UrlEncode(PhoneNumber) + "&fact=1&v=4");
+            //logger.Trace($"{getPhoneNumber} {answer}");
+
+            string[] ListSpamCategories = GetListSpamCategories();
+
+            foreach (string sc in ListSpamCategories)
+            {
+                int indexOfSubstring = answer.IndexOf(sc);
+                if (indexOfSubstring != -1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         private static string GET(string Url, string Data)
         {
@@ -23,18 +39,14 @@ namespace _3CXSpamCallBlocker
 
         private static string[] GetListSpamCategories()
         {
+            string[] listSpamCategories;
+            string filePathListSpamCategories = @".\BlacklistCategories.txt";
 
-            string[] ListSpamCategories;
-
-        
-                string filePathBlacklistCategories = @".\BlacklistCategories.txt";
-
-
-                if (!File.Exists(filePathBlacklistCategories))
+            if (!File.Exists(filePathListSpamCategories))
+            {
+                try
                 {
-                    try
-                    {
-                        ListSpamCategories = new string[] { "Возможно, опросы от операторов связи"
+                    listSpamCategories = new string[] { "Возможно, опросы от операторов связи"
                         , "Возможно, реклама услуг связи"
                         , "Возможно, нежелательный звонок"
                         , "Возможно, нежелательные звонки"
@@ -47,46 +59,18 @@ namespace _3CXSpamCallBlocker
                         , "Возможно, звонят, чтобы провести опрос"
                         , "Возможно, звонят из банка"
                         , "unknow" };
-                        File.WriteAllLines(filePathBlacklistCategories, ListSpamCategories, Encoding.UTF8);
-                    }
-                    catch (Exception e)
-                    {
-                        throw e;
-                    }
-
+                    File.WriteAllLines(filePathListSpamCategories, listSpamCategories, Encoding.UTF8);
                 }
-                else
+                catch (Exception e)
                 {
-                    ListSpamCategories = File.ReadAllLines(filePathBlacklistCategories);
-                }
-
-
-            return ListSpamCategories;
-
-
-        }
-
-        static bool ThisBadCall(string PhoneNumber)
-        {
-            string answer = GET("https://yandex.ru/suggest/suggest-ya.cgi", "part=" + HttpUtility.UrlEncode(PhoneNumber) + "&fact=1&v=4");
-            //logger.Trace($"{getPhoneNumber} {answer}");
-
-
-            foreach (string spamCategory in GetListSpamCategories())
-            {
-                int indexOfSubstring = answer.IndexOf(spamCategory);
-                if (indexOfSubstring != -1)
-                {
-                    return true;
+                    throw e;
                 }
             }
-            return false;
+            else
+            {
+                listSpamCategories = File.ReadAllLines(filePathListSpamCategories);
+            }
+            return listSpamCategories;
         }
-
-
-
-
-
-
     }
 }
