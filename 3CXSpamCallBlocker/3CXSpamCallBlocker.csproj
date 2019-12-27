@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NLog" Version="4.6.8" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="3cxpscomcpp2">
       <HintPath>C:\Program Files\3CX Phone System\Bin\3cxpscomcpp2.dll</HintPath>
       <Private>false</Private>

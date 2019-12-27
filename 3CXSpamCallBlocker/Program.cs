@@ -5,6 +5,9 @@ using TCX.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using NLog;
+using NLog.Targets;
+using NLog.Config;
 
 
 namespace _3CXSpamCallBlocker
@@ -16,6 +19,58 @@ namespace _3CXSpamCallBlocker
                 StringComparer.InvariantCultureIgnoreCase);
 
         public static bool Stop { get; private set; }
+
+        public static readonly Logger MyLogger = LogManager.GetLogger("3CXSpamCallBlocker");
+
+        private static void ConfigurationLogger()
+        {
+
+            var config = new LoggingConfiguration();
+            var consoleTarget = new ColoredConsoleTarget("target1")
+            {
+                Layout = @"${date:format=HH\:mm\:ss} ${message} ${exception}"
+            };
+            config.AddTarget(consoleTarget);
+
+            var fileTargetWhiteNumber = new FileTarget("target2")
+            {
+                FileName = "${basedir}/DropCallLogs/${shortdate} White number.txt",
+                Layout = "${longdate} ${message}  ${exception}"
+            };
+            config.AddTarget(fileTargetWhiteNumber);
+
+            var fileTargetBlackNumber = new FileTarget("target3")
+            {
+                FileName = "${basedir}/DropCallLogs/${shortdate} Black number.txt",
+                Layout = "${longdate} ${message}  ${exception}"
+            };
+            config.AddTarget(fileTargetBlackNumber);
+
+            var fileTargetAll = new FileTarget("target4")
+            {
+                FileName = "${basedir}/DropCallLogs/${shortdate} All.txt",
+                Layout = "${longdate} ${message}  ${exception}"
+            };
+            config.AddTarget(fileTargetAll);
+
+            var fileTargetFatalError = new FileTarget("target5")
+            {
+                FileName = "${basedir}/DropCallLogs/${shortdate} Error.txt",
+                Layout = "${longdate} ${message}  ${exception}"
+            };
+            config.AddTarget(fileTargetFatalError);
+
+
+            config.AddRuleForOneLevel(LogLevel.Info, fileTargetBlackNumber, "DropCall");
+            config.AddRuleForOneLevel(LogLevel.Error, fileTargetWhiteNumber, "DropCall");
+            config.AddRuleForOneLevel(LogLevel.Fatal, fileTargetFatalError, "DropCall");
+            config.AddRuleForAllLevels(fileTargetAll, "DropCall");
+            config.AddRuleForOneLevel(LogLevel.Info, consoleTarget, "DropCall");
+            config.AddRuleForOneLevel(LogLevel.Error, consoleTarget, "DropCall");
+            config.AddRuleForOneLevel(LogLevel.Fatal, consoleTarget, "DropCall");
+
+            LogManager.Configuration = config;
+        }
         static void ReadConfiguration(string filePath)
         {
             var content = File.ReadAllLines(filePath);
@@ -71,6 +126,8 @@ namespace _3CXSpamCallBlocker
             Console.OutputEncoding = new UnicodeEncoding();
             Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler);
 
+            
+
             try
             {
                 var filePath = @"C:\Program Files\3CX Phone System\Bin\3CXPhoneSystem.ini";
@@ -79,6 +136,7 @@ namespace _3CXSpamCallBlocker
                     throw new Exception("Cannot find 3CXPhoneSystem.ini");
                 }
                 ReadConfiguration(filePath);
+                ConfigurationLogger();
                 AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
                 Bootstrap(args);
             }

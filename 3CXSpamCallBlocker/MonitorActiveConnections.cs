@@ -10,6 +10,7 @@ namespace _3CXSpamCallBlocker
 {
     static class MonitorActiveConnections
     {
+
         static string ConnectionAsString(ActiveConnection ac)
         {
             return $"ID={ac.ID}:CCID={ac.CallConnectionID}:S={ac.Status}:DN={ac.DN.Number}:EP={ac.ExternalParty}:REC={ac.RecordingState}";
@@ -49,6 +50,7 @@ namespace _3CXSpamCallBlocker
                     if (WhoCalling.ThisBadCall(owner.ExternalParty))
                     {
                         kv.Key.Drop();
+                        Program.MyLogger.Info($"{owner.ExternalParty} drop call");
                         break;
                     }
 
