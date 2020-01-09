@@ -6,12 +6,12 @@ using System.Web;
 
 namespace _3CXSpamCallBlocker
 {
-    internal class WhoCalling
+    class WhoCalling
     {
         public static bool ThisBadCall(string PhoneNumber)
         {
             string answer = GET("https://yandex.ru/suggest/suggest-ya.cgi", "part=" + HttpUtility.UrlEncode(PhoneNumber) + "&fact=1&v=4");
-            //logger.Trace($"{getPhoneNumber} {answer}");
+            Program.MyLogger.Trace($"{PhoneNumber} {answer}");
 
             string[] ListSpamCategories = GetListSpamCategories();
 
@@ -26,7 +26,7 @@ namespace _3CXSpamCallBlocker
             return false;
         }
 
-        private static string GET(string Url, string Data)
+        static string GET(string Url, string Data)
         {
             WebRequest req = WebRequest.Create(Url + "?" + Data);
             WebResponse resp = req.GetResponse();
@@ -37,7 +37,7 @@ namespace _3CXSpamCallBlocker
             return Out;
         }
 
-        private static string[] GetListSpamCategories()
+        static string[] GetListSpamCategories()
         {
             string[] listSpamCategories;
             string filePathListSpamCategories = @".\BlacklistCategories.txt";

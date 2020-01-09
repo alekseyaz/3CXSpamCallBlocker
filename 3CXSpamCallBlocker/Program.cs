@@ -34,40 +34,40 @@ namespace _3CXSpamCallBlocker
 
             var fileTargetWhiteNumber = new FileTarget("target2")
             {
-                FileName = "${basedir}/DropCallLogs/${shortdate} White number.txt",
+                FileName = "${basedir}/logs/${shortdate} White number.txt",
                 Layout = "${longdate} ${message}  ${exception}"
             };
             config.AddTarget(fileTargetWhiteNumber);
 
             var fileTargetBlackNumber = new FileTarget("target3")
             {
-                FileName = "${basedir}/DropCallLogs/${shortdate} Black number.txt",
+                FileName = "${basedir}/logs/${shortdate} Black number.txt",
                 Layout = "${longdate} ${message}  ${exception}"
             };
             config.AddTarget(fileTargetBlackNumber);
 
             var fileTargetAll = new FileTarget("target4")
             {
-                FileName = "${basedir}/DropCallLogs/${shortdate} All.txt",
+                FileName = "${basedir}/logs/${shortdate} All.txt",
                 Layout = "${longdate} ${message}  ${exception}"
             };
             config.AddTarget(fileTargetAll);
 
             var fileTargetFatalError = new FileTarget("target5")
             {
-                FileName = "${basedir}/DropCallLogs/${shortdate} Error.txt",
+                FileName = "${basedir}/logs/${shortdate} Error.txt",
                 Layout = "${longdate} ${message}  ${exception}"
             };
             config.AddTarget(fileTargetFatalError);
 
 
-            config.AddRuleForOneLevel(LogLevel.Info, fileTargetBlackNumber, "DropCall");
-            config.AddRuleForOneLevel(LogLevel.Error, fileTargetWhiteNumber, "DropCall");
-            config.AddRuleForOneLevel(LogLevel.Fatal, fileTargetFatalError, "DropCall");
-            config.AddRuleForAllLevels(fileTargetAll, "DropCall");
-            config.AddRuleForOneLevel(LogLevel.Info, consoleTarget, "DropCall");
-            config.AddRuleForOneLevel(LogLevel.Error, consoleTarget, "DropCall");
-            config.AddRuleForOneLevel(LogLevel.Fatal, consoleTarget, "DropCall");
+            config.AddRuleForOneLevel(LogLevel.Info, fileTargetBlackNumber, "3CXSpamCallBlocker");
+            config.AddRuleForOneLevel(LogLevel.Error, fileTargetWhiteNumber, "3CXSpamCallBlocker");
+            config.AddRuleForOneLevel(LogLevel.Fatal, fileTargetFatalError, "3CXSpamCallBlocker");
+            config.AddRuleForAllLevels(fileTargetAll, "3CXSpamCallBlocker");
+            config.AddRuleForOneLevel(LogLevel.Info, consoleTarget, "3CXSpamCallBlocker");
+            config.AddRuleForOneLevel(LogLevel.Error, consoleTarget, "3CXSpamCallBlocker");
+            config.AddRuleForOneLevel(LogLevel.Fatal, consoleTarget, "3CXSpamCallBlocker");
 
             LogManager.Configuration = config;
         }
@@ -126,7 +126,7 @@ namespace _3CXSpamCallBlocker
             Console.OutputEncoding = new UnicodeEncoding();
             Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler);
 
-            
+            Console.WriteLine("Программа 3CXSpamCallBlocker, время старта: " + DateTime.Now);
 
             try
             {
