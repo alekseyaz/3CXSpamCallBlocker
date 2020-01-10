@@ -10,73 +10,9 @@ namespace _3CXSpamCallBlocker
 {
     static class MonitorActiveConnections
     {
-
-        //static string ConnectionAsString(ActiveConnection ac)
-        //{
-        //    return $"ID={ac.ID}:CCID={ac.CallConnectionID}:S={ac.Status}:DN={ac.DN.Number}:EP={ac.ExternalParty}:REC={ac.RecordingState}";
-        //}
-
-        //static void PrintAllCalls()
-        //{
-        //    foreach (var c in PhoneSystem.Root.GetActiveConnectionsByCallID())
-        //    {
-        //        Console.ResetColor();
-        //        Console.WriteLine($"PrintAllCalls Call {c.Key}:");
-        //        foreach (var ac in c.Value.OrderBy(x => x.CallConnectionID))
-        //        {
-        //            Console.WriteLine($"    {ConnectionAsString(ac)}");
-        //        }
-        //    }
-        //}
-
-        //static void CheckDNCall(Dictionary<ActiveConnection, ActiveConnection[]> ownertoparties)
-        //{
-
-        //    string lastVerifiedGoodNumber = ""; //flag
-
-        //    try
-        //    {
-        //        foreach (var kv in ownertoparties)
-        //        {
-        //            //Console.WriteLine($"PrintDNCall Call {kv.Key.CallID}:");
-        //            //var owner = kv.Key;
-        //            //Console.ForegroundColor = ConsoleColor.Green;
-        //            //Console.WriteLine($"    {ConnectionAsString(owner)}");
-        //            //Console.ResetColor();
-        //            //foreach (var party in kv.Value)
-        //            //{
-        //            //    Console.WriteLine($"    {ConnectionAsString(party)}");
-        //            //}
-        //            var ExternalParty = kv.Key.ExternalParty;
-
-        //            if (lastVerifiedGoodNumber != ExternalParty)
-        //            {
-
-        //                if (WhoCalling.ThisBadCall(ExternalParty))
-        //                {
-        //                    kv.Key.Drop();
-        //                    Program.MyLogger.Info($"{ExternalParty} Drop call");
-        //                    break;
-        //                }
-        //                else
-        //                {
-        //                    lastVerifiedGoodNumber = ExternalParty;
-        //                    Program.MyLogger.Error($"{ExternalParty} white number");
-        //                }
-        //            }
-
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
-        
+      
         public static void Run()
         {
-
-            //PrintAllCalls();
 
             string lastVerifiedGoodNumber = ""; //flag
 
@@ -86,20 +22,19 @@ namespace _3CXSpamCallBlocker
 
                 using (var connections = dn.GetActiveConnections().GetDisposer())
                 {
-                    var alltakenconnections = connections.ToDictionary(x => x, y => y.OtherCallParties);
                     try
                     {
-                        foreach (var kv in alltakenconnections)
+                        foreach (var ac in connections)
                         {
 
-                            var ExternalParty = kv.Key.ExternalParty;
+                            var ExternalParty = ac.ExternalParty;
 
                             if (lastVerifiedGoodNumber != ExternalParty)
                             {
 
                                 if (WhoCalling.ThisBadCall(ExternalParty))
                                 {
-                                    kv.Key.Drop();
+                                    ac.Drop();
                                     Program.MyLogger.Info($"{ExternalParty} drop call");
                                     break;
                                 }
@@ -114,15 +49,16 @@ namespace _3CXSpamCallBlocker
                     }
                     catch (Exception e)
                     {
-                        throw e;
+                        Program.MyLogger.Fatal(e, "exceptions");
                     }
 
-                    //CheckDNCall(alltakenconnections);
-                    foreach (var a in alltakenconnections.Values)
+                    foreach (var a in connections)
                     {
-                        a.GetDisposer().Dispose();
+                        a.Dispose();
                     }
+
                 }
+
                 Thread.Sleep(100);
             }
 
