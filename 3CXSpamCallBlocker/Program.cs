@@ -34,28 +34,28 @@ namespace _3CXSpamCallBlocker
 
             var fileTargetWhiteNumber = new FileTarget("target2")
             {
-                FileName = "${basedir}/logs/${shortdate} White number.txt",
+                FileName = "${basedir}/logs/${shortdate} good number.txt",
                 Layout = "${longdate} ${message}  ${exception}"
             };
             config.AddTarget(fileTargetWhiteNumber);
 
             var fileTargetBlackNumber = new FileTarget("target3")
             {
-                FileName = "${basedir}/logs/${shortdate} Black number.txt",
+                FileName = "${basedir}/logs/${shortdate} spam number.txt",
                 Layout = "${longdate} ${message}  ${exception}"
             };
             config.AddTarget(fileTargetBlackNumber);
 
             var fileTargetAll = new FileTarget("target4")
             {
-                FileName = "${basedir}/logs/${shortdate} All.txt",
+                FileName = "${basedir}/logs/${shortdate} all.txt",
                 Layout = "${longdate} ${message}  ${exception}"
             };
             config.AddTarget(fileTargetAll);
 
             var fileTargetFatalError = new FileTarget("target5")
             {
-                FileName = "${basedir}/logs/${shortdate} Error.txt",
+                FileName = "${basedir}/logs/${shortdate} error.txt",
                 Layout = "${longdate} ${message}  ${exception}"
             };
             config.AddTarget(fileTargetFatalError);
