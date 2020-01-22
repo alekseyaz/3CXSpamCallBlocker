@@ -130,7 +130,7 @@ namespace _3CXSpamCallBlocker
 
             try
             {
-                var filePath = @"C:\Program Files\3CX Phone System\Bin\3CXPhoneSystem.ini";
+                var filePath = @".\3CXPhoneSystem.ini";
                 if (!File.Exists(filePath))
                 {
                     throw new Exception("Cannot find 3CXPhoneSystem.ini");
